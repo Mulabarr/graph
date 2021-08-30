@@ -51,6 +51,24 @@ def member_splitter(a):
         return member
 
 
+def user_premission():
+    user_input = input('user:')
+    user_roles = []
+    user_ancestors = ''
+    for user in edge.bindings()['bindings']:
+        if user_input in member_splitter(user['members']):
+            user_roles.append(role_splitter(user['role']))
+            user_ancestors = edge.to_node_id()['to_node_id']
+
+    print(f'User have premissions:')
+    for i in user_roles:
+        print(i)
+    print('In this ancestors:')
+    for i in user_ancestors:
+        print(i)
+
+
+
 def second_task():
     user_input = input('unique:')
     if node.id_resource() == user_input:
@@ -82,8 +100,9 @@ def main():
     edges.append(edge.ancestors())
     edges.append(edge.bindings())
     graph = Graph(nodes, edges)
-    # second_task()
-    # third_task()
+    user_premission()
+    second_task()
+    third_task()
     fourth_task()
 
 if __name__ == '__main__':

@@ -41,6 +41,18 @@ class Edge:
             bindings_dict['bindings'].append({'role': role, 'members': members})
         return bindings_dict
 
+    def from_node(self):
+        node = Node(self.json)
+        node_id = node.id_resource()
+        from_node_dict = {'from_node_id': node_id}
+        return from_node_dict
+
+    def to_node_id(self):
+        ancestors_dict = {'to_node_id': []}
+        ancestors = self.json['ancestors']
+        ancestors_dict['to_node_id'] = ancestors
+        return ancestors_dict
+
 
 class Graph:
     def __init__(self, nodes, edges):
