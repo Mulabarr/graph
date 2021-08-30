@@ -34,46 +34,41 @@ class GCP:
         return id_resource
 
     def ancestors(self):
-        ancestors_dict = {'ancestors': []}
         ancestors = self.json['ancestors']
-        ancestors_dict['ancestors'] = ancestors
-        return ancestors_dict
+        return ancestors
 
     def bindings(self):
-        bindings_dict = {'bindings': []}
+        bindings_dict = []
         role_and_member = self.json["iam_policy"]["bindings"]
         for i in role_and_member:
             role = GCP.role_splitter(self, i['role'])
             members = []
             for j in i['members']:
                 members.append(j)
-            bindings_dict['bindings'].append({'role': role, 'members': members})
+            bindings_dict.append({'role': role, 'members': members})
         return bindings_dict
 
     def from_node(self):
         node = GCP(self.json)
         node_id = node.id_resource()
-        from_node_dict = {'from_node_id': node_id}
-        return from_node_dict
+        return node_id
 
     def to_node_id(self):
-        ancestors_dict = {'to_node_id': []}
         ancestors = self.json['ancestors']
-        ancestors_dict['to_node_id'] = ancestors
-        return ancestors_dict
+        return ancestors
 
     def get_edges(self):
-        edges = []
-        edges.append(GCP.ancestors(self))
-        edges.append(GCP.bindings(self))
-        edges.append(GCP.from_node(self))
-        edges.append(GCP.to_node_id(self))
+        edges = {}
+        edges['ancestors'] = GCP.ancestors(self)
+        edges['bindings'] = GCP.bindings(self)
+        edges['from_node'] = GCP.from_node(self)
+        edges['to_node_id'] = GCP.to_node_id(self)
         return edges
 
     def get_nodes(self):
-        nodes = []
-        nodes.append(GCP.asset_type(self))
-        nodes.append(GCP.id_resource(self))
+        nodes = {}
+        nodes['type'] = (GCP.asset_type(self))
+        nodes['id'] = (GCP.id_resource(self))
         return nodes
 
 class Graph:

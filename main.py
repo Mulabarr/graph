@@ -473,19 +473,14 @@ def user_premission(user_input):
     user_ancestors = []
     for i in json:
         gcp = GCP(i)
-        edge = Edge(gcp.ancestors(), gcp.bindings(), gcp.from_node(), gcp.to_node_id())
-        for user in edge.bindings['bindings']:
+        graph = Graph(gcp.get_nodes(), gcp.get_edges())
+        for user in graph.edges['bindings']:
             if user_input in member_splitter(user['members']):
                 if user['role'] not in user_roles:
                     user_roles.append(role_splitter(user['role']))
-                for anc in gcp.to_node_id()['to_node_id']:
+                for anc in graph.edges['to_node_id']:
                     if anc not in user_ancestors:
                         user_ancestors.append(anc)
-
-
-        # for node_id in edge.to_node_id['to_node_id']:
-        #     if node_id not in user_ancestors:
-        #         user_ancestors.append(node_id)
 
     print(f'User have premissions:')
     for i in user_roles:
@@ -499,21 +494,21 @@ def user_premission(user_input):
 def second_task(user_input):
     for i in json:
         gcp = GCP(i)
-        edge = Edge(gcp.ancestors(), gcp.bindings(), gcp.from_node(), gcp.to_node_id())
-        node = Node(gcp.asset_type(), gcp.id_resource())
-        if node.id_resource == user_input:
-            print(edge.ancestors)
+        graph = Graph(gcp.get_nodes(), gcp.get_edges())
+        if graph.nodes['id'] == user_input:
+            print(graph.edges['ancestors'])
 
 
 def third_task(user_input):
     for i in json:
         gcp = GCP(i)
-        edge = Edge(gcp.ancestors(), gcp.bindings(), gcp.from_node(), gcp.to_node_id())
-        node = Node(gcp.asset_type(), gcp.id_resource())
+        graph = Graph(gcp.get_nodes(), gcp.get_edges())
         listt = []
-        for user in edge.bindings['bindings']:
+        for user in graph.edges['bindings']:
             if user_input == member_splitter(user['members']):
-                listt.append([node.id_resource, node.asset_type, role_splitter(user['role'])])
+                listt.append(graph.nodes['id'])
+                listt.append(graph.nodes['type'])
+                listt.append(graph.edges['bindings'][0]['role'])
         if not listt:
             continue
         else:
@@ -523,11 +518,10 @@ def third_task(user_input):
 def fourth_task(user_input):
     for i in json:
         gcp = GCP(i)
-        edge = Edge(gcp.ancestors(), gcp.bindings(), gcp.from_node(), gcp.to_node_id())
-        node = Node(gcp.asset_type(), gcp.id_resource())
+        graph = Graph(gcp.get_nodes(), gcp.get_edges())
         listt = []
-        if node.id_resource == user_input:
-            for user in edge.bindings['bindings']:
+        if graph.nodes['id'] == user_input:
+            for user in graph.edges['bindings']:
                 listt.append([member_splitter(user['members']), role_splitter(user['role'])])
         if not listt:
             continue
@@ -537,9 +531,6 @@ def fourth_task(user_input):
 
 def main():
 
-    for i in json:
-        gcp = GCP(i)
-        graph = Graph(gcp.get_nodes(), gcp.get_edges())
     user_input = input('user:')
     user_premission(user_input)
 
