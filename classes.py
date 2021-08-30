@@ -4,6 +4,24 @@ from typing import List
 
 
 class Node:
+    def __init__(self, asset_type, id_resource):
+        self.asset_type = asset_type
+        self.id_resource = id_resource
+
+
+class Edge:
+    def __init__(self, ancestors, bindings, from_node, to_node_id):
+        self.ancestors = ancestors
+        self.bindings = bindings
+        self.from_node = from_node
+        self.to_node_id = to_node_id
+
+
+class GCP:
+    def role_splitter(self, a):
+        role = a.split('/')[-1]
+        return role
+
     def __init__(self, json):
         self.json = json
 
@@ -15,15 +33,6 @@ class Node:
         id_resource = self.json['name'].split('/')[-1]
         return id_resource
 
-
-class Edge:
-    def role_splitter(self, a):
-        role = a.split('/')[-1]
-        return role
-
-    def __init__(self, json):
-        self.json = json
-
     def ancestors(self):
         ancestors_dict = {'ancestors': []}
         ancestors = self.json['ancestors']
@@ -34,7 +43,7 @@ class Edge:
         bindings_dict = {'bindings': []}
         role_and_member = self.json["iam_policy"]["bindings"]
         for i in role_and_member:
-            role = Edge.role_splitter(self, i['role'])
+            role = GCP.role_splitter(self, i['role'])
             members = []
             for j in i['members']:
                 members.append(j)
@@ -42,7 +51,7 @@ class Edge:
         return bindings_dict
 
     def from_node(self):
-        node = Node(self.json)
+        node = GCP(self.json)
         node_id = node.id_resource()
         from_node_dict = {'from_node_id': node_id}
         return from_node_dict
@@ -53,6 +62,19 @@ class Edge:
         ancestors_dict['to_node_id'] = ancestors
         return ancestors_dict
 
+    def get_edges(self):
+        edges = []
+        edges.append(GCP.ancestors(self))
+        edges.append(GCP.bindings(self))
+        edges.append(GCP.from_node(self))
+        edges.append(GCP.to_node_id(self))
+        return edges
+
+    def get_nodes(self):
+        nodes = []
+        nodes.append(GCP.asset_type(self))
+        nodes.append(GCP.id_resource(self))
+        return nodes
 
 class Graph:
     def __init__(self, nodes, edges):
