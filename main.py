@@ -1,6 +1,5 @@
-from pprint import pprint
 
-from classes import Node, Edge, Graph, GCP
+from classes import Graph, GCP
 json = [{
    "name":"//cloudbilling.googleapis.com/billingAccounts/01B2E0-10D255-037E4D",
    "asset_type":"cloudbilling.googleapis.com/BillingAccount",
@@ -496,23 +495,17 @@ def second_task(user_input):
         gcp = GCP(i)
         graph = Graph(gcp.get_nodes(), gcp.get_edges())
         if graph.nodes['id'] == user_input:
-            print(graph.edges['ancestors'])
+            print(graph.edges['to_node_id'])
 
 
 def third_task(user_input):
     for i in json:
         gcp = GCP(i)
         graph = Graph(gcp.get_nodes(), gcp.get_edges())
-        listt = []
         for user in graph.edges['bindings']:
             if user_input == member_splitter(user['members']):
-                listt.append(graph.nodes['id'])
-                listt.append(graph.nodes['type'])
-                listt.append(graph.edges['bindings'][0]['role'])
-        if not listt:
-            continue
-        else:
-            print(listt)
+                listt = [graph.nodes['id'], graph.nodes['type'], graph.edges['bindings'][0]['role']]
+                print(listt)
 
 
 def fourth_task(user_input):

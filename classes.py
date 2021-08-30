@@ -33,10 +33,6 @@ class GCP:
         id_resource = self.json['name'].split('/')[-1]
         return id_resource
 
-    def ancestors(self):
-        ancestors = self.json['ancestors']
-        return ancestors
-
     def bindings(self):
         bindings_dict = []
         role_and_member = self.json["iam_policy"]["bindings"]
@@ -59,7 +55,6 @@ class GCP:
 
     def get_edges(self):
         edges = {}
-        edges['ancestors'] = GCP.ancestors(self)
         edges['bindings'] = GCP.bindings(self)
         edges['from_node'] = GCP.from_node(self)
         edges['to_node_id'] = GCP.to_node_id(self)
